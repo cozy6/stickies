@@ -1,0 +1,25 @@
+.sticky-note {
+  background-color: #ffcc66;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  width: 250px;
+  position: absolute;
+  cursor: pointer;
+  height: 250px;
+  display: flex;
+  align-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.sticky-note p {
+  margin: 0;
+  max-width: 180px;
+  word-wrap: break-word;
+}
+
+.sticky-note form {
+  display: inline-block;
+}
