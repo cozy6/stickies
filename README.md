@@ -11,6 +11,9 @@ node index.js
 - In the index.js file you must enter your master password from PGAdmin4
 
 # Setting up PGAdmin
+## Create the database
+- The database name is sticky-notes
+<img width="457" alt="image" src="https://github.com/cozy6/stickies/assets/89648002/c5e788fa-db35-43d4-b206-239404557185">
 
 
 ## Using Nodemon
