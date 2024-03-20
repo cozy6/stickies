@@ -7,6 +7,12 @@ npm install
 node index.js
 ```
 
+# Passwords
+- In the index.js file you must enter your master password from PGAdmin4
+
+# Setting up PGAdmin
+
+
 ## Using Nodemon
 - Open a terminal on your device *You may need to enter root 'sudo su'*
 ```
