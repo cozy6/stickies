@@ -15,6 +15,10 @@ node index.js
 - The database name is sticky-notes
 <img width="457" alt="image" src="https://github.com/cozy6/stickies/assets/89648002/c5e788fa-db35-43d4-b206-239404557185">
 
+## Create Table in database sticky-notes
+- create a new table by clicking on the *query tool in the upper left corner*
+- name the table "items"
+  <img width="789" alt="Screenshot 2024-03-23 at 4 15 35 PM" src="https://github.com/cozy6/stickies/assets/113483666/d4b7adde-4771-4a79-8a2f-df74626b9ccb">
 
 ## Using Nodemon
 - Open a terminal on your device *You may need to enter root 'sudo su'*
