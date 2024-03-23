@@ -8,7 +8,7 @@ node index.js
 ```
 
 # Passwords
-- In the index.js file you must enter your master password from PGAdmin4
+- In the index.ejs file you must enter *your* master password from PGAdmin4
 
 # Setting up PGAdmin
 ## Create the database
