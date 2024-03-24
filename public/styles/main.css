@@ -206,3 +206,19 @@
   font-weight: 400;
   line-height: normal;
 }
+
+/***instructions bar***/
+.sidebar {
+position: absolute;
+top: 1em;
+right: 1em;
+height: inherit;
+  width: 250px; /* Adjust width as needed */
+  background-color: #f3f3f3;
+  padding: 20px;
+  box-sizing: border-box;
+  border-radius: 15px;
+  box-shadow: 1px 4px 5px #bababa;
+  
+}
+
