@@ -1,116 +1,149 @@
 <%- include('partials/header.ejs'); -%>
 
-<div class="box">
-  <% for(let item of listItems){ %>
-  <div class="item" style="position: absolute; top: <%=item.pos_y%>px; left: <%=item.pos_x%>px">
-    <div id="sticky-note<%= item.id %>" class="sticky-note" draggable="true" ondragstart="dragStart(event)">
-      <form action="/delete" method="post">
-        <input type="checkbox" onchange="this.form.submit()" name="deleteItemId" value="<%= item.id %>" />
-      </form>
-      <p id="title<%= item.id %>"><%= item.title %></p>
 
-      <form class="edit" action="/edit" method="post">
-        <input type="hidden" name="updatedItemId" value="<%= item.id %>" />
-        <input
-          id="input<%= item.id %>"
-          type="text"
-          name="updatedItemTitle"
-          value="<%= item.title %>"
-          autocomplete="off"
-          autofocus="true"
-          hidden="true" />
-        <button id="done<%= item.id %>" class="edit" type="submit" hidden>
-          <img class="icon" src="/assets/icons/check-solid.svg" alt="tick image" />
-        </button>
-      </form>
-    </div>
-    <script>
-      function dragElement(elmnt) {
-        var pos1 = 0,
-          pos2 = 0,
-          pos3 = 0,
-          pos4 = 0;
-        var parent = elmnt.parentElement;
-        var parentRect = parent.getBoundingClientRect();
-        if (document.getElementById(elmnt.id + "header")) {
-          document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
-        } else {
-          elmnt.onmousedown = dragMouseDown;
-        }
 
-        function dragMouseDown(e) {
-          e = e || window.event;
-          e.preventDefault();
-          pos3 = e.clientX;
-          pos4 = e.clientY;
-          document.onmouseup = closeDragElement;
-          document.onmousemove = elementDrag;
-        }
-        function elementDrag(e) {
-          e = e || window.event;
-          e.preventDefault();
+  <div class="box">
+    <% for(let item of listItems){ %>
+      <div class="sticky-item" style="position: absolute; top: <%=item.pos_y%>px; left: <%=item.pos_x%>px">
+        <div id="sticky-note<%= item.id %>" class="sticky-note" draggable="true" ondragstart="dragStart(event)">
+          <form action="/delete" method="post">
+            <input type="checkbox" onchange="this.form.submit()" name="deleteItemId" value="<%= item.id %>" />
+          </form>
+          <p id="title<%= item.id %>">
+            <%= item.title %>
+          </p>
 
-          // save previous mouse position
-          pos1 = pos3;
-          pos2 = pos4;
+          <form class="edit" action="/edit" method="post">
+            <input type="hidden" name="updatedItemId" value="<%= item.id %>" />
+            <input id="input<%= item.id %>" type="text" name="updatedItemTitle" value="<%= item.title %>"
+              autocomplete="off" autofocus="true" hidden="true" />
+            <button id="done<%= item.id %>" class="edit" type="submit" hidden>
+              <img class="icon" src="/assets/icons/check-solid.svg" alt="tick image" />
+            </button>
+          </form>
+        </div>
+        <script>
+          function dragElement(elmnt) {
+            var pos1 = 0,
+              pos2 = 0,
+              pos3 = 0,
+              pos4 = 0;
+            var parent = elmnt.parentElement;
+            var parentRect = parent.getBoundingClientRect();
+            if (document.getElementById(elmnt.id + "header")) {
+              document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+            } else {
+              elmnt.onmousedown = dragMouseDown;
+            }
 
-          // update mouse position
-          pos3 = e.clientX;
-          pos4 = e.clientY;
+            function dragMouseDown(e) {
+              e = e || window.event;
+              e.preventDefault();
+              pos3 = e.clientX;
+              pos4 = e.clientY;
+              document.onmouseup = closeDragElement;
+              document.onmousemove = elementDrag;
+            }
+            function elementDrag(e) {
+              e = e || window.event;
+              e.preventDefault();
 
-          // calculate position relative to the document
-          elmnt.style.top = elmnt.offsetTop - pos2 + pos4 + "px";
-          elmnt.style.left = elmnt.offsetLeft - pos1 + pos3 + "px";
-        }
+              // save previous mouse position
+              pos1 = pos3;
+              pos2 = pos4;
 
-        function closeDragElement() {
-          // Parse the final top and left style values to integers
-          var pos_x = parseInt(elmnt.style.left, 10);
-          var pos_y = parseInt(elmnt.style.top, 10);
+              // update mouse position
+              pos3 = e.clientX;
+              pos4 = e.clientY;
 
-          updatePosition(elmnt.id.replace("sticky-note", ""), pos_x, pos_y);
+              // calculate position relative to the document
+              elmnt.style.top = elmnt.offsetTop - pos2 + pos4 + "px";
+              elmnt.style.left = elmnt.offsetLeft - pos1 + pos3 + "px";
+            }
 
-          document.onmouseup = null;
-          document.onmousemove = null;
-        }
+            function closeDragElement() {
+              // Parse the final top and left style values to integers
+              var pos_x = parseInt(elmnt.style.left, 10);
+              var pos_y = parseInt(elmnt.style.top, 10);
 
-        function updatePosition(id, pos_x, pos_y) {
-          fetch("http://localhost:8000/updatePosition", {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ id, pos_x, pos_y }),
-          })
-            .then((response) => {
-              if (response.status === 404) {
-                throw new Error("Requested resource not found");
-              } else if (response.status === 500) {
-                throw new Error("Server error");
-              } else if (response.ok) {
-                return response.json();
-              } else {
-                throw new Error("Unexpected response");
-              }
-            })
-            .then((data) => {
-              console.log("Success:", data);
-            })
-            .catch((error) => {
-              console.error("Error:", error);
-            });
-        }
-      }
+              updatePosition(elmnt.id.replace("sticky-note", ""), pos_x, pos_y);
 
-      dragElement(document.getElementById("sticky-note<%= item.id %>"));
-    </script>
+              document.onmouseup = null;
+              document.onmousemove = null;
+            }
+
+            function updatePosition(id, pos_x, pos_y) {
+              fetch("http://localhost:8000/updatePosition", {
+                method: "PUT",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ id, pos_x, pos_y }),
+              })
+                .then((response) => {
+                  if (response.status === 404) {
+                    throw new Error("Requested resource not found");
+                  } else if (response.status === 500) {
+                    throw new Error("Server error");
+                  } else if (response.ok) {
+                    return response.json();
+                  } else {
+                    throw new Error("Unexpected response");
+                  }
+                })
+                .then((data) => {
+                  console.log("Success:", data);
+                })
+                .catch((error) => {
+                  console.error("Error:", error);
+                });
+            }
+          }
+
+          dragElement(document.getElementById("sticky-note<%= item.id %>"));
+        </script>
+      </div>
+      <% } %>
+        <div class="forms-container">
+
+          <form class="item" action="/add" method="post">
+            <input class="item-input" type="text" name="newItem" placeholder="✏️  Create a note here..."
+              autocomplete="off" autofocus="true" />
+            <button class="add-button" type="submit" name="list" value="<%= listTitle %>">
+              <p class="add-sign">+</p>
+            </button>
+          </form>
+
+          <div class="label-system">
+
+            <div class="label-header">
+              <p>Label Station</p>
+              <img class="spark-img" src="/assets/spark.svg" alt="spark" />
+            </div>
+
+            <div class="colour-selection">
+              <div class="colour-option">
+                <button class="colour" id="colour-1"></button>
+                <p class="colour-label1">IMPORTANT</p>
+              </div>
+              <div class="colour-option">
+                <button class="colour" id="colour-2"></button>
+                <p class="colour-label2">TO DO</p>
+              </div>
+              <div class="colour-option">
+                <button class="colour" id="colour-3"></button>
+                <p class="colour-label3">SCHEDULED</p>
+              </div>
+              <div class="colour-option">
+                <button class="colour" id="colour-4"></button>
+                <p class="colour-label4">NOTES</p>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
   </div>
-  <% } %>
 
-  <form class="item" action="/add" method="post">
-    <input type="text" name="newItem" placeholder="New Item" autocomplete="off" autofocus="true" />
-    <button class="add" type="submit" name="list" value="<%= listTitle %>">+</button>
-  </form>
-</div>
-
-<!-- <%- include('partials/footer.ejs'); -%> -->
+  <!-- <%- include('partials/footer.ejs'); -%> -->
+  

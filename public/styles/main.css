@@ -9,6 +9,7 @@
   cursor: pointer;
   height: 250px;
   display: flex;
+  flex-wrap: wrap;
   align-content: center;
   align-items: center;
   flex-direction: column;
@@ -22,4 +23,186 @@
 
 .sticky-note form {
   display: inline-block;
+}
+
+.forms-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 720px;
+}
+
+/** Adding New Sticky Form Styles **/
+
+.item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  margin: 1.25em;
+  width: 18.438em;
+  height: 3.688em;
+  border-radius: 15px;
+  background: #f6fafc;
+  box-shadow: 2px 4px 10px 0px rgba(55, 71, 86, 0.13);
+}
+
+.item-input {
+  display: flex;
+  flex-direction: row;
+  opacity: 70%;
+  color: rgba(53, 53, 53, 0.3);
+  text-align: right;
+  font-family: Inter;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  border: none;
+  background: none;
+}
+
+.add-button {
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #353535;
+  border: #353535;
+  border-radius: 10px;
+}
+
+.add-sign {
+  color: #fff;
+  font-family: Inter;
+  font-size: 35px;
+  font-weight: 100;
+  padding-bottom: 0.125em;
+}
+
+/** Label Station Styles **/
+.label-system {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  z-index: 1;
+  gap: 1.5em;
+}
+
+.label-header {
+  display: flex;
+  flex-direction: row;
+  gap: 0.15em;
+  color: #353535;
+  font-family: Inter;
+  font-size: 25px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+}
+
+.spark-img {
+  padding-bottom: 0.75em;
+}
+
+.colour-selection {
+  display: flex;
+  flex-direction: row;
+  width: 506px;
+  height: 98px;
+  padding-bottom: 1.75em;
+  padding-left: 1em;
+  padding-right: 1em;
+  justify-content: space-around;
+  align-items: center;
+  border-radius: 15px;
+  background: #f6fafc;
+  box-shadow: 2px 6px 15px 0px rgba(55, 71, 86, 0.2);
+}
+
+.colour-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.colour {
+  width: 104.475px;
+  height: 106px;
+}
+
+.colour:hover {
+  width: 104.475px;
+  height: 106px;
+  -webkit-transform: translateY(-10px);
+  transform: translateY(-10px);
+  -webkit-transition: transform 0.2s ease 0s;
+  transition: transform 0.2s ease 0s;
+  cursor: pointer;
+}
+
+#colour-1 {
+  border-radius: 0px 0px 20px 0px;
+  border: 1px solid rgba(218, 151, 255, 0.45);
+  background: #e2c0f5;
+  box-shadow: 5px 5px 12px 0px rgba(67, 8, 100, 0.15);
+}
+
+#colour-2 {
+  border-radius: 0px 0px 20px 0px;
+  border: 1px solid rgba(135, 185, 230, 0.45);
+  background: #c0dcf5;
+  box-shadow: 5px 5px 12px 0px rgba(8, 34, 100, 0.15);
+}
+
+#colour-3 {
+  border-radius: 0px 0px 20px 0px;
+  border: 1px solid rgba(111, 178, 94, 0.45);
+  background: #cbf5c0;
+  box-shadow: 5px 5px 12px 0px rgba(38, 100, 8, 0.15);
+}
+
+#colour-4 {
+  border-radius: 0px 0px 20px 0px;
+  border: 1px solid rgba(218, 168, 42, 0.45);
+  background: #f5e6c0;
+  box-shadow: 5px 5px 12px 0px rgba(177, 148, 77, 0.3);
+}
+
+.colour-label1 {
+  color: #bd68ec;
+  font-family: Oliver;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.colour-label2 {
+  color: #5f9fd8;
+  font-family: Oliver;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.colour-label3 {
+  color: #78bf66;
+  font-family: Oliver;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.colour-label4 {
+  color: #dea613;
+  font-family: Oliver;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
 }
