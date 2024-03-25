@@ -15,6 +15,17 @@
   flex-direction: column;
 }
 
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.box {
+  position: relative;
+}
+
 .sticky-note p {
   margin: 0;
   max-width: 180px;
@@ -83,11 +94,14 @@
 
 /** Label Station Styles **/
 .label-system {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   flex-direction: column;
-  align-self: center;
-  z-index: 1;
   gap: 1.5em;
+  z-index: 1;
 }
 
 .label-header {
@@ -103,7 +117,7 @@
 }
 
 .spark-img {
-  padding-bottom: 0.75em;
+  margin-top: 0.5em;
 }
 
 .colour-selection {
@@ -209,16 +223,26 @@
 
 /***instructions bar***/
 .sidebar {
-position: absolute;
-top: 1em;
-right: 1em;
-height: inherit;
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  height: inherit;
   width: 250px; /* Adjust width as needed */
   background-color: #f3f3f3;
   padding: 20px;
   box-sizing: border-box;
   border-radius: 15px;
   box-shadow: 1px 4px 5px #bababa;
-  
 }
 
+.developers {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  align-content: flex-end;
+  padding-right: 5em;
+}

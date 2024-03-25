@@ -1,171 +1,318 @@
 <%- include('partials/header.ejs'); -%>
 
+<div class="box">
+  <% for(let item of listItems){ %>
+  <div class="sticky-item" style="position: absolute; top: <%=item.pos_y%>px; left: <%=item.pos_x%>px">
+    <div id="sticky-note<%= item.id %>" class="sticky-note" draggable="true" ondragstart="dragStart(event)">
+      <form action="/delete" method="post">
+        <input type="checkbox" onchange="this.form.submit()" name="deleteItemId" value="<%= item.id %>" />
+      </form>
+      <p id="title<%= item.id %>" class="sticky-title"><%= item.title %></p>
+    </div>
+  </div>
+  <% } %>
+  <div class="forms-container">
+    <form class="item" action="/add" method="post">
+      <input
+        class="item-input"
+        type="text"
+        name="newItem"
+        placeholder="✏️  Create a note here..."
+        autocomplete="off"
+        autofocus="true" />
+      <button class="add-button" type="submit" name="list" value="<%= listTitle %>">
+        <p class="add-sign">+</p>
+      </button>
+    </form>
 
-
-  <div class="box">
-    <% for(let item of listItems){ %>
-      <div class="sticky-item" style="position: absolute; top: <%=item.pos_y%>px; left: <%=item.pos_x%>px">
-        <div id="sticky-note<%= item.id %>" class="sticky-note" draggable="true" ondragstart="dragStart(event)">
-          <form action="/delete" method="post">
-            <input type="checkbox" onchange="this.form.submit()" name="deleteItemId" value="<%= item.id %>" />
-          </form>
-          <p id="title<%= item.id %>">
-            <%= item.title %>
-          </p>
-
-          <form class="edit" action="/edit" method="post">
-            <input type="hidden" name="updatedItemId" value="<%= item.id %>" />
-            <input id="input<%= item.id %>" type="text" name="updatedItemTitle" value="<%= item.title %>"
-              autocomplete="off" autofocus="true" hidden="true" />
-            <button id="done<%= item.id %>" class="edit" type="submit" hidden>
-              <img class="icon" src="/assets/icons/check-solid.svg" alt="tick image" />
-            </button>
-          </form>
-        </div>
-        <script>
-          function dragElement(elmnt) {
-            var pos1 = 0,
-              pos2 = 0,
-              pos3 = 0,
-              pos4 = 0;
-            var parent = elmnt.parentElement;
-            var parentRect = parent.getBoundingClientRect();
-            if (document.getElementById(elmnt.id + "header")) {
-              document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
-            } else {
-              elmnt.onmousedown = dragMouseDown;
-            }
-
-            function dragMouseDown(e) {
-              e = e || window.event;
-              e.preventDefault();
-              pos3 = e.clientX;
-              pos4 = e.clientY;
-              document.onmouseup = closeDragElement;
-              document.onmousemove = elementDrag;
-            }
-            function elementDrag(e) {
-              e = e || window.event;
-              e.preventDefault();
-
-              // save previous mouse position
-              pos1 = pos3;
-              pos2 = pos4;
-
-              // update mouse position
-              pos3 = e.clientX;
-              pos4 = e.clientY;
-
-              // calculate position relative to the document
-              elmnt.style.top = elmnt.offsetTop - pos2 + pos4 + "px";
-              elmnt.style.left = elmnt.offsetLeft - pos1 + pos3 + "px";
-            }
-
-            function closeDragElement() {
-              // Parse the final top and left style values to integers
-              var pos_x = parseInt(elmnt.style.left, 10);
-              var pos_y = parseInt(elmnt.style.top, 10);
-
-              updatePosition(elmnt.id.replace("sticky-note", ""), pos_x, pos_y);
-
-              document.onmouseup = null;
-              document.onmousemove = null;
-            }
-
-            function updatePosition(id, pos_x, pos_y) {
-              fetch("http://localhost:8000/updatePosition", {
-                method: "PUT",
-                headers: {
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ id, pos_x, pos_y }),
-              })
-                .then((response) => {
-                  if (response.status === 404) {
-                    throw new Error("Requested resource not found");
-                  } else if (response.status === 500) {
-                    throw new Error("Server error");
-                  } else if (response.ok) {
-                    return response.json();
-                  } else {
-                    throw new Error("Unexpected response");
-                  }
-                })
-                .then((data) => {
-                  console.log("Success:", data);
-                })
-                .catch((error) => {
-                  console.error("Error:", error);
-                });
-            }
-          }
-
-          dragElement(document.getElementById("sticky-note<%= item.id %>"));
-        </script>
+    <div class="label-system">
+      <div class="label-header">
+        <p>Label Station</p>
+        <img class="spark-img" src="/assets/spark.svg" alt="spark" width="20px" height="30px" />
       </div>
-      <% } %>
-        <div class="forms-container">
 
-          <form class="item" action="/add" method="post">
-            <input class="item-input" type="text" name="newItem" placeholder="✏️  Create a note here..."
-              autocomplete="off" autofocus="true" />
-            <button class="add-button" type="submit" name="list" value="<%= listTitle %>">
-              <p class="add-sign">+</p>
-            </button>
-          </form>
-
-          <div class="label-system">
-
-            <div class="label-header">
-              <p>Label Station</p>
-              <img class="spark-img" src="/assets/spark.svg" alt="spark" />
-            </div>
-
-            <div class="colour-selection">
-              <div class="colour-option">
-                <button class="colour" id="colour-1"></button>
-                <p class="colour-label1">IMPORTANT</p>
-              </div>
-              <div class="colour-option">
-                <button class="colour" id="colour-2"></button>
-                <p class="colour-label2">TO DO</p>
-              </div>
-              <div class="colour-option">
-                <button class="colour" id="colour-3"></button>
-                <p class="colour-label3">SCHEDULED</p>
-              </div>
-              <div class="colour-option">
-                <button class="colour" id="colour-4"></button>
-                <p class="colour-label4">NOTES</p>
-              </div>
-            </div>
-
-          </div>
-
+      <div class="colour-selection">
+        <div class="colour-option">
+          <button class="colour" id="colour-1"></button>
+          <p class="colour-label1">IMPORTANT</p>
         </div>
+        <div class="colour-option">
+          <button class="colour" id="colour-2"></button>
+          <p class="colour-label2">TO DO</p>
+        </div>
+        <div class="colour-option">
+          <button class="colour" id="colour-3"></button>
+          <p class="colour-label3">SCHEDULED</p>
+        </div>
+        <div class="colour-option">
+          <button class="colour" id="colour-4"></button>
+          <p class="colour-label4">NOTES</p>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="sidebar">
-    <h2 class="sidebar-title">Instructions:</h2>
-    <ul class="sidebar-list">
-      <h3 class="sidebar-item-title">Create</h3>
-      <li class="sidebar-item">
-     
-        <p class="sidebar-item-description">Use the sidebar at the top-left corner to create your new note!</p>
-      </li>
-      <h3 class="sidebar-item-title">Update</h3>
-      <li class="sidebar-item">
-        
-        <p class="sidebar-item-description">Update your note by clicking on the note. Edit your note with your changes.</p>
-      </li>
-    
-      <h3 class="sidebar-item-title">Delete</h3>
-      <li class="sidebar-item">
-      
-        <p class="sidebar-item-description">Click the checkbox located at the top of the note to remove the note!</p>
-      </li>
-    
-    </ul>
-  </div>
-  
-  <!-- <%- include('partials/footer.ejs'); -%> -->
-  
+</div>
+<div class="sidebar">
+  <h2 class="sidebar-title">Instructions:</h2>
+  <ul class="sidebar-list">
+    <h3 class="sidebar-item-title">Create</h3>
+    <li class="sidebar-item">
+      <p class="sidebar-item-description">Use the sidebar at the top-left corner to create your new note!</p>
+    </li>
+    <h3 class="sidebar-item-title">Update</h3>
+    <li class="sidebar-item">
+      <p class="sidebar-item-description">
+        Update your note by clicking on the note. Edit your note with your changes.
+      </p>
+    </li>
+
+    <h3 class="sidebar-item-title">Delete</h3>
+    <li class="sidebar-item">
+      <p class="sidebar-item-description">Click the checkbox located at the top of the note to remove the note!</p>
+    </li>
+  </ul>
+</div>
+
+<script>
+  let selectedStickyNote;
+
+  // Function to retrieve color data for each sticky note from the backend
+  async function retrieveColors() {
+    const notes = document.querySelectorAll(".sticky-note");
+    for (const note of notes) {
+      const noteId = note.id.replace("sticky-note", "");
+      const color = await getColorFromBackend(noteId);
+      if (color) {
+        note.style.backgroundColor = getColorValue(color);
+      }
+    }
+  }
+
+  // Function to get color data from the backend
+  async function getColorFromBackend(noteId) {
+    try {
+      const response = await fetch(`/getColor/${noteId}`);
+      if (response.ok) {
+        const data = await response.json();
+        return data.color;
+      } else {
+        console.error("Failed to retrieve color data from the backend.");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      return null;
+    }
+  }
+
+  // Function to update color in the backend
+  async function updateColorInBackend(noteId, color) {
+    try {
+      const response = await fetch(`/updateColor/${noteId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ color }),
+      });
+
+      if (response.ok) {
+        console.log("Color updated successfully in the backend.");
+      } else {
+        console.error("Failed to update color in the backend.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
+
+  // Function to handle selecting a sticky note and enabling editing
+  function selectStickyNote(note) {
+    selectedStickyNote = note;
+    console.log("Sticky note selected:", selectedStickyNote);
+    const titleElement = document.getElementById(`title${note.id.replace("sticky-note", "")}`);
+    titleElement.contentEditable = true;
+    titleElement.focus();
+  }
+
+  // Function to handle drag and drop functionality
+  function dragElement(elmnt) {
+    var pos1 = 0,
+      pos2 = 0,
+      pos3 = 0,
+      pos4 = 0;
+    var parent = elmnt.parentElement;
+    var parentRect = parent.getBoundingClientRect();
+    if (document.getElementById(elmnt.id + "header")) {
+      document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+    } else {
+      elmnt.onmousedown = dragMouseDown;
+    }
+
+    function dragMouseDown(e) {
+      e = e || window.event;
+      e.preventDefault();
+      pos3 = e.clientX;
+      pos4 = e.clientY;
+      document.onmouseup = closeDragElement;
+      document.onmousemove = elementDrag;
+    }
+
+    function elementDrag(e) {
+      e = e || window.event;
+      e.preventDefault();
+      pos1 = pos3;
+      pos2 = pos4;
+      pos3 = e.clientX;
+      pos4 = e.clientY;
+      elmnt.style.top = elmnt.offsetTop - pos2 + pos4 + "px";
+      elmnt.style.left = elmnt.offsetLeft - pos1 + pos3 + "px";
+    }
+
+    function closeDragElement() {
+      var pos_x = parseInt(elmnt.style.left, 10);
+      var pos_y = parseInt(elmnt.style.top, 10);
+      updatePosition(elmnt.id.replace("sticky-note", ""), pos_x, pos_y);
+      document.onmouseup = null;
+      document.onmousemove = null;
+    }
+
+    function updatePosition(id, pos_x, pos_y) {
+      fetch("/updatePosition", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ id, pos_x, pos_y }),
+      })
+        .then((response) => {
+          if (response.status === 404) {
+            throw new Error("Requested resource not found");
+          } else if (response.status === 500) {
+            throw new Error("Server error");
+          } else if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error("Unexpected response");
+          }
+        })
+        .then((data) => {
+          console.log("Success:", data);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
+  }
+
+  function updateStickyNoteContent(noteId, newContent) {
+    fetch(`http://localhost:8000/updateContent/${noteId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ newContent }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          console.log("Sticky note content updated successfully in the backend.");
+        } else {
+          console.error("Failed to update sticky note content in the backend.");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }
+
+  // Event listener to detect changes in sticky note content
+  document.querySelectorAll(".sticky-note").forEach((note) => {
+    note.addEventListener("input", () => {
+      const noteId = note.id.replace("sticky-note", "");
+      const newContent = note.innerText;
+      updateStickyNoteContent(noteId, newContent);
+    });
+  });
+
+  // Function to attach drag functionality to sticky notes
+  function attachDragFunctionality() {
+    document.querySelectorAll(".sticky-note").forEach((note) => {
+      dragElement(note);
+      note.addEventListener("click", () => {
+        selectStickyNote(note);
+      });
+    });
+  }
+
+  // Function to map color IDs to color values
+  function getColorValue(colorId) {
+    switch (colorId) {
+      case "colour-1": // Update to match backend color values
+        return "#e2c0f5";
+      case "colour-2":
+        return "#c0dcf5";
+      case "colour-3":
+        return "#cbf5c0";
+      case "colour-4":
+        return "#f5e6c0";
+      default:
+        return ""; // Return empty string if no match
+    }
+  }
+
+  async function retrieveData() {
+    const notes = document.querySelectorAll(".sticky-note");
+    for (const note of notes) {
+      const noteId = note.id.replace("sticky-note", "");
+      const data = await getDataFromBackend(noteId);
+      if (data) {
+        note.style.backgroundColor = getColorValue(data.color);
+        const titleElement = document.getElementById(`title${noteId}`);
+        titleElement.innerText = data.title; // Update the title
+        note.innerText = data.content; // Update the content
+      }
+    }
+  }
+
+  async function getDataFromBackend(noteId) {
+    try {
+      const response = await fetch(`/getData/${noteId}`);
+      if (response.ok) {
+        const data = await response.json();
+        return data;
+      } else {
+        console.error("Failed to retrieve data from the backend.");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      return null;
+    }
+  }
+
+  // Event listener for color selection
+  document.querySelectorAll(".colour").forEach((item) => {
+    item.addEventListener("click", (event) => {
+      if (selectedStickyNote) {
+        const color = getColorValue(event.target.id);
+        selectedStickyNote.style.backgroundColor = color;
+        const noteId = selectedStickyNote.id.replace("sticky-note", "");
+        updateColorInBackend(noteId, event.target.id);
+      } else {
+        console.log("Please select a sticky note first.");
+      }
+    });
+  });
+
+  // Function to initialize the script
+  async function initialize() {
+    await retrieveColors();
+    attachDragFunctionality();
+  }
+
+  document.addEventListener("DOMContentLoaded", initialize);
+</script>
+
+<div class="footer">
+  <%- include('partials/footer.ejs'); -%>
+</div>
