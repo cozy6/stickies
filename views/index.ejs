@@ -4,7 +4,7 @@
   <% for(let item of listItems){ %>
   <div class="sticky-item" style="position: absolute; top: <%=item.pos_y%>px; left: <%=item.pos_x%>px">
     <div id="sticky-note<%= item.id %>" class="sticky-note" draggable="true" ondragstart="dragStart(event)">
-      <form action="/delete" method="post">
+      <form class="delete-button" action="/delete" method="post">
         <input type="checkbox" onchange="this.form.submit()" name="deleteItemId" value="<%= item.id %>" />
       </form>
       <p id="title<%= item.id %>" class="sticky-title"><%= item.title %></p>
@@ -51,6 +51,9 @@
       </div>
     </div>
   </div>
+  <div class="footer">
+    <%- include('partials/footer.ejs'); -%>
+  </div>  
 </div>
 <div class="sidebar">
   <h2 class="sidebar-title">Instructions:</h2>
@@ -62,7 +65,7 @@
     <h3 class="sidebar-item-title">Update</h3>
     <li class="sidebar-item">
       <p class="sidebar-item-description">
-        Update your note by clicking on the note. Edit your note with your changes.
+        Update your note by editing the colours! Use the Label Station below and choose what colour you'd like to edit your note. Feel free to move your note around!
       </p>
     </li>
 
@@ -313,6 +316,6 @@
   document.addEventListener("DOMContentLoaded", initialize);
 </script>
 
-<div class="footer">
+<!-- <div class="footer">
   <%- include('partials/footer.ejs'); -%>
-</div>
+</div> -->
